@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\InvaildRequestException;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -60,8 +61,47 @@ class ProductsController extends Controller
     {
         //判断商品是否已经上架，如果没有则抛出异常
         if (!$product->on_sale) {
-            throw new \Exception('商品未上架');
+            throw new InvaildRequestException('商品未上架');
         }
-        return view('products.show', compact('product'));
+
+        $favored = false;
+        //用户为登录时返回的是null，已登录时返回的是对应的用户对象
+        if($user = $request->user()) {
+            //从当前用户已收藏的商品中搜做id为当前商品id的商品
+            //boolval()函数用于把值转换为布尔值
+            $favored = boolval($user->favoriteProducts()->find($product->id));
+        }
+        return view('products.show', compact('product', 'favored'));
+    }
+
+    /**
+     * 收藏
+     * @param Product $product
+     * @param Request $request
+     * @return array
+     */
+    public function favor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        if($user->favoriteProducts()->find($product->id)) {
+            return [];
+        }
+        $user->favoriteProducts()->attach($product);
+
+        return [];
+    }
+
+    /**
+     * 取消收藏
+     * @param Product $product
+     * @param Request $request
+     * @return array
+     */
+    public function disfavor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        $user->favoriteProducts()->detach($product);
+
+        return [];
     }
 }
