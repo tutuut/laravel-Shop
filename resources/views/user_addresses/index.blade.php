@@ -47,7 +47,7 @@
 @stop
 
 @section('scriptsAfterJs')
-    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+{{--    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>--}}
     <script>
         $(document).ready(function() {
             // 删除按钮点击事件
