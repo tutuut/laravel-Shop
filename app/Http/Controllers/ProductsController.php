@@ -104,4 +104,18 @@ class ProductsController extends Controller
 
         return [];
     }
+
+    /**
+     * 收藏列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function favorites(Request $request)
+    {
+        $products = $request->user()->favoriteProducts();
+        if($products) {
+            $products = $products->paginate(16);
+        }
+        return view('products.favorites', compact('products'));
+    }
 }

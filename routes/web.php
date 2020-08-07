@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/products')->name('root');
 Route::get('products', 'ProductsController@index')->name('products.index');
-Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 Auth::routes(['verify' => true]);
 
 //地址路由
@@ -39,4 +38,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ->name('products.favor');
     Route::delete('products/{product}/favorite', 'ProductsController@disfavor')
         ->name('products.disfavor');
+    Route::get('products/favorites', 'ProductsController@favorites')->name('products.favorites');
 });
+
+//和products.favorites冲突
+Route::get('products/{product}', 'ProductsController@show')->name('products.show');
