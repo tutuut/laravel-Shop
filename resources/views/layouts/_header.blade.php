@@ -17,6 +17,18 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav navbar-right">
                 <!-- Authentication Links -->
+                <a class="nav-link mt-1" href="{{ route('cart.index') }}"><i class="fa fa-shopping-cart"></i></a>
+                <a class="nav-link mt-1" href="{{ route('user_addresses.index') }}">收货地址</a>
+                <a href="{{ route('products.favorites') }}" class="nav-link mt-1">我的收藏</a>
+                @guest
+                <a class="nav-link  mt-1" href="{{ route('login') }}">登录</a>
+                <a class="nav-link  mt-1" href="{{ route('register') }}">注册</a>
+                @else
+                    <a class="nav-link  mt-1" href="">{{ Auth::user()->name }}</a>
+                    <a class="nav-link  mt-1" id="logout" href="#"
+                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">退出登录</a>
+                @endguest
+
                 @guest
                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">登录</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">注册</a></li>
@@ -37,6 +49,7 @@
                         </div>
                     </li>
                 @endguest
+
             </ul>
         </div>
     </div>

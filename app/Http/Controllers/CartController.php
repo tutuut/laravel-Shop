@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductSku;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddCartRequest;
 use App\Models\CartItem;
 
 class CartController extends Controller
 {
+    /**
+     * 添加购物车
+     * @param AddCartRequest $request
+     * @return array
+     */
     public function add(AddCartRequest $request)
     {
         $user = $request->user();
@@ -27,6 +33,24 @@ class CartController extends Controller
             $cart->productSku()->associate($skuId);
             $cart->save();
         }
+
+        return [];
+    }
+
+    /**
+     * 购物车列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index(Request $request)
+    {
+        $cartItems = $request->user()->cartItems()->with(['productSku.product'])->get();
+        return view('cart.index', compact('cartItems'));
+    }
+
+    public function remove(Request $request, ProductSku $sku)
+    {
+        $request->user()->cartItems()->where('product_sku_id', $sku->id)->delete();
 
         return [];
     }
