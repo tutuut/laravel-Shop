@@ -55,3 +55,4 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 //和products.favorites冲突
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
+
