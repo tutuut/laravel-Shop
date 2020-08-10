@@ -57,6 +57,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     //支付返回结果
     Route::get('payment/alipay/return', 'PaymentController@alipayReturn')
         ->name('payment.alipay.return');
+    //确认收货
+    Route::post('orders/{order}/received', 'OrdersController@received')->name('orders.received');
+    //展示评价和发布评价
+    Route::get('orders/{order}/review', 'OrdersController@review')->name('orders.review.show');
+    Route::post('prders/{order}/review', 'OrdersController@sendReview')
+        ->name('orders.review.store');
 });
 
 //和products.favorites冲突
