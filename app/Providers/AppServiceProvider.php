@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\StuController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Monolog\Logger;
 use Yansongda\Pay\Log;
@@ -42,6 +44,19 @@ class AppServiceProvider extends ServiceProvider
 
             return Pay::wechat($config);
         });
+
+//        $this->app->bind('stu_say', function ($app) {
+//            return new \App\Http\Controllers\StuController;
+//        });
+//        $this->app->singleton('stu_say', function ($app) {
+//            return new \App\Http\Controllers\StuController;
+//        });
+        $api = new StuController();
+        $this->app->instance('stu_say', $api);
+
+        $this->app->when('StuController')
+            ->needs('$value')
+            ->give(3);
     }
 
     /**
@@ -52,5 +67,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        DB::listen(function ($query) {
+            dump($query->sql);//"select * from users where id = :id"
+            dump($query->bindings);//["id" => 1]
+            dump($query->time);//1.44ms
+        });
     }
 }
